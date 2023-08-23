@@ -17,6 +17,7 @@ import {
 } from '@/utils/app/clean';
 import { DEFAULT_SYSTEM_PROMPT, DEFAULT_TEMPERATURE } from '@/utils/app/const';
 import {
+  getUserHistory,
   saveConversation,
   saveConversations,
   updateConversation,
@@ -292,26 +293,30 @@ const Home = ({
       dispatch({ field: 'showPromptbar', value: showPromptbar === 'true' });
     }
 
-    const folders = localStorage.getItem('folders');
-    if (folders) {
-      dispatch({ field: 'folders', value: JSON.parse(folders) });
-    }
+    // FETCH user-conversation-history-here
+    // and dispatch the values instead of using from local storage
+    // Use getUserHistory() function
+    getUserHistory().then((response) => {
+      const folders = response?.folders;
+      if (folders) {
+        dispatch({ field: 'folders', value: folders });
+      }
 
-    const prompts = localStorage.getItem('prompts');
-    if (prompts) {
-      dispatch({ field: 'prompts', value: JSON.parse(prompts) });
-    }
+      const prompts = response?.prompts;
+      if (prompts) {
+        dispatch({ field: 'prompts', value: prompts });
+      }
 
-    const conversationHistory = localStorage.getItem('conversationHistory');
-    if (conversationHistory) {
-      const parsedConversationHistory: Conversation[] =
-        JSON.parse(conversationHistory);
-      const cleanedConversationHistory = cleanConversationHistory(
-        parsedConversationHistory,
-      );
+      const conversationHistory = response?.history;
+      if (conversationHistory) {
+        const parsedConversationHistory: Conversation[] = conversationHistory;
+        const cleanedConversationHistory = cleanConversationHistory(
+          parsedConversationHistory,
+        );
 
-      dispatch({ field: 'conversations', value: cleanedConversationHistory });
-    }
+        dispatch({ field: 'conversations', value: cleanedConversationHistory });
+      }
+    });
 
     const selectedConversation = localStorage.getItem('selectedConversation');
     if (selectedConversation) {
@@ -396,6 +401,7 @@ const Home = ({
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  // locale = 'ti';
   const defaultModelId =
     (process.env.DEFAULT_MODEL &&
       Object.values(OpenAIModelID).includes(
