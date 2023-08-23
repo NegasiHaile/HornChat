@@ -17,6 +17,19 @@ export const updatePrompt = (updatedPrompt: Prompt, allPrompts: Prompt[]) => {
   };
 };
 
-export const savePrompts = (prompts: Prompt[]) => {
+export const savePrompts = async (prompts: Prompt[]) => {
   localStorage.setItem('prompts', JSON.stringify(prompts));
+  const uDetail: string = localStorage.getItem('user') || '{}';
+  const user = JSON.parse(uDetail);
+  const updatedPrompts = await fetch(
+    `/api/user_history?field=prompts&userId=${user?._id}`,
+    {
+      method: 'PUT',
+      body: JSON.stringify({
+        prompts: prompts,
+      }),
+    },
+  );
+  const parsedUpdatedPrompts = await updatedPrompts.json();
+  console.log('Response:', parsedUpdatedPrompts);
 };
