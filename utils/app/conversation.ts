@@ -30,20 +30,15 @@ export const saveConversations = async (conversations: Conversation[]) => {
   localStorage.setItem('conversationHistory', JSON.stringify(conversations));
   const uDetail: string = localStorage.getItem('user') || '{}';
   const user = JSON.parse(uDetail);
-  const updatedHistory = await fetch(
-    `/api/user_history?field=history&userId=${user?._id}`,
-    {
-      method: 'PUT',
-      body: JSON.stringify({
-        history: conversations,
-      }),
-    },
-  );
-  const parsedUpdatedHistory = await updatedHistory.json();
-  console.log('Response:', parsedUpdatedHistory);
+  await fetch(`/api/user_history?field=history&userId=${user?._id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      history: conversations,
+    }),
+  });
 };
 
-export const getUserHistoryService = async (): Promise<UserHistory> => {
+export const getUserHistory = async (): Promise<UserHistory> => {
   const uDetail: string = localStorage.getItem('user') || '{}';
   const user: UserDetail = JSON.parse(uDetail);
 
@@ -70,7 +65,7 @@ export const getUserHistoryService = async (): Promise<UserHistory> => {
     };
     localStorage.removeItem('user');
     localStorage.setItem('user', JSON.stringify(user));
-    return parsedUserHistory;
+    return await parsedUserHistory;
   };
 
   const getUserHistory = async (userId: string) => {
@@ -97,5 +92,3 @@ export const getUserHistoryService = async (): Promise<UserHistory> => {
     return createUserHistory();
   }
 };
-
-export default getUserHistoryService;
