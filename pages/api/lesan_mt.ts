@@ -7,15 +7,19 @@ export default async function handler(
   if (req.method !== 'POST') {
     return res.status(405).end(); // Method Not Allowed
   }
-  const { src_lang, tgt_lang } = req.query;
-  const { text } = JSON.parse(req.body);
+  let reqBody = req.body;
+  if (typeof req.body !== 'object') {
+    reqBody = JSON.parse(req.body);
+  }
 
+  const { src_lang, tgt_lang } = req.query;
+  const { text } = reqBody;
   const API_URL = process.env.NEXT_PUBLIC_LESAN_API_URL;
   const API_KEY = process.env.NEXT_PUBLIC_LESAN_API_KEY;
 
   if (!(!!src_lang && !!tgt_lang))
     res
-      .status(500)
+      .status(400)
       .json({ message: 'Source or Target language not provided!' });
 
   if (API_URL && API_KEY) {
@@ -33,7 +37,7 @@ export default async function handler(
     })
       .then((response) => response.json())
       .then((data) => {
-        res.status(200).json({ data2: data });
+        res.status(200).json({ data: data });
       })
       .catch((error) => {
         res.status(500).json({ error: error });
