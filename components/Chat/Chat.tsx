@@ -70,6 +70,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
   const handleSend = useCallback(
     async (message: Message, deleteCount = 0, plugin: Plugin | null = null) => {
+      //  requesting to Lesan
+      const prompt = message.content;
+
       if (selectedConversation) {
         let updatedConversation: Conversation;
         if (deleteCount) {
@@ -91,15 +94,41 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           field: 'selectedConversation',
           value: updatedConversation,
         });
+
+        console.log(
+          'updatedConversation-messages',
+          updatedConversation.messages,
+        );
+
         homeDispatch({ field: 'loading', value: true });
         homeDispatch({ field: 'messageIsStreaming', value: true });
+
+        const lesan_ti_en_res = await fetch(
+          'api/lesan_mt?src_lang=ti&tgt_lang=en',
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              text: prompt,
+            }),
+          },
+        );
+        const { data } = await lesan_ti_en_res.json();
+        console.log('lesanData:', data);
+
+        console.log('Prompt:', message.content);
+        console.log('Translated Prompt:', data.tgt_text);
+
         const chatBody: ChatBody = {
           model: updatedConversation.model,
-          messages: updatedConversation.messages,
+          messages: [
+            ...selectedConversation.messages,
+            { role: 'user', content: data.tgt_text },
+          ],
           key: apiKey,
           prompt: updatedConversation.prompt,
           temperature: updatedConversation.temperature,
         };
+        console.log('chatBody:', chatBody);
         const endpoint = getEndpoint(plugin);
         let body;
         if (!plugin) {
@@ -124,14 +153,15 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           signal: controller.signal,
           body,
         });
+
         if (!response.ok) {
           homeDispatch({ field: 'loading', value: false });
           homeDispatch({ field: 'messageIsStreaming', value: false });
           toast.error(response.statusText);
           return;
         }
-        const data = response.body;
-        if (!data) {
+        const text = await response.text();
+        if (!text) {
           homeDispatch({ field: 'loading', value: false });
           homeDispatch({ field: 'messageIsStreaming', value: false });
           return;
@@ -146,57 +176,64 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               name: customName,
             };
           }
-          homeDispatch({ field: 'loading', value: false });
-          const reader = data.getReader();
-          const decoder = new TextDecoder();
-          let done = false;
+          // homeDispatch({ field: 'loading', value: false });
           let isFirst = true;
-          let text = '';
-          while (!done) {
-            if (stopConversationRef.current === true) {
-              controller.abort();
-              done = true;
-              break;
-            }
-            const { value, done: doneReading } = await reader.read();
-            done = doneReading;
-            const chunkValue = decoder.decode(value);
-            text += chunkValue;
-            if (isFirst) {
-              isFirst = false;
-              const updatedMessages: Message[] = [
-                ...updatedConversation.messages,
-                { role: 'assistant', content: chunkValue },
-              ];
-              updatedConversation = {
-                ...updatedConversation,
-                messages: updatedMessages,
-              };
-              homeDispatch({
-                field: 'selectedConversation',
-                value: updatedConversation,
-              });
-            } else {
-              const updatedMessages: Message[] =
-                updatedConversation.messages.map((message, index) => {
-                  if (index === updatedConversation.messages.length - 1) {
-                    return {
-                      ...message,
-                      content: text,
-                    };
-                  }
-                  return message;
-                });
-              updatedConversation = {
-                ...updatedConversation,
-                messages: updatedMessages,
-              };
-              homeDispatch({
-                field: 'selectedConversation',
-                value: updatedConversation,
-              });
-            }
+
+          const lesan_en_ti_res = await fetch(
+            'api/lesan_mt?src_lang=en&tgt_lang=ti',
+            {
+              method: 'POST',
+              body: JSON.stringify({
+                text: text,
+              }),
+            },
+          );
+          const { data } = await lesan_en_ti_res.json();
+
+          console.log('OpenAi Response:', text);
+          console.log('Translated Response:', data?.tgt_text);
+          console.log('Prompt on bottom:', prompt);
+
+          if (isFirst) {
+            isFirst = false;
+            const updatedMessages: Message[] = [
+              ...updatedConversation.messages,
+              { role: 'assistant', content: prompt },
+            ];
+            updatedConversation = {
+              ...updatedConversation,
+              messages: updatedMessages,
+            };
+            homeDispatch({
+              field: 'selectedConversation',
+              value: updatedConversation,
+            });
           }
+
+          const updatedMessages: Message[] = updatedConversation.messages.map(
+            (message, index) => {
+              if (index === updatedConversation.messages.length - 1) {
+                return {
+                  ...message,
+                  content: data?.tgt_text,
+                };
+              }
+              return message;
+            },
+          );
+
+          updatedConversation = {
+            ...updatedConversation,
+            messages: updatedMessages,
+          };
+
+          homeDispatch({
+            field: 'selectedConversation',
+            value: updatedConversation,
+          });
+
+          homeDispatch({ field: 'loading', value: false });
+
           saveConversation(updatedConversation);
           const updatedConversations: Conversation[] = conversations.map(
             (conversation) => {
@@ -352,37 +389,26 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
       {!(apiKey || serverSideApiKeyIsSet) ? (
         <div className="mx-auto flex h-full w-[300px] flex-col justify-center space-y-6 sm:w-[600px]">
           <div className="text-center text-4xl font-bold text-black dark:text-white">
-            Welcome to Chatbot UI
+            Welcome to HornChat
           </div>
           <div className="text-center text-lg text-black dark:text-white">
             <div className="mb-2 font-bold">
-              This chatbot UI is 100% unaffiliated with OpenAI.
+              This HornChat is 100% unaffiliated with OpenAI.
             </div>
           </div>
           <div className="text-center text-gray-500 dark:text-gray-400">
             <div className="mb-2">
-              This chatbot UI allows you to plug in your API key to use this UI
-              with their API.
+              This HornChat allows you to to ask ChatGPT in Horn of Africa
+              languages.
             </div>
             <div className="mb-2">
-              It is <span className="italic">only</span> used to communicate
-              with their API.
+              The current version is <span className="italic">only</span> enable
+              you to ask ChatGPT in Amharic and Tigrigna.
             </div>
             <div className="mb-2">
               {t(
                 'Please set your OpenAI API key in the bottom left of the sidebar.',
               )}
-            </div>
-            <div>
-              {t("If you don't have an OpenAI API key, you can get one here: ")}
-              <a
-                href="https://platform.openai.com/account/api-keys"
-                target="_blank"
-                rel="noreferrer"
-                className="text-blue-500 hover:underline"
-              >
-                openai.com
-              </a>
             </div>
           </div>
         </div>
@@ -404,7 +430,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                         <Spinner size="16px" className="mx-auto" />
                       </div>
                     ) : (
-                      'Chatbot UI'
+                      'HornChat'
                     )}
                   </div>
 
