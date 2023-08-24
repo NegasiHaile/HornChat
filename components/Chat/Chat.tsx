@@ -72,6 +72,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     async (message: Message, deleteCount = 0, plugin: Plugin | null = null) => {
       //  requesting to Lesan
       const prompt = message.content;
+      const selectedLanguage = localStorage.getItem('selectedLanguage') || 'ti';
 
       if (selectedConversation) {
         let updatedConversation: Conversation;
@@ -95,16 +96,11 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           value: updatedConversation,
         });
 
-        console.log(
-          'updatedConversation-messages',
-          updatedConversation.messages,
-        );
-
         homeDispatch({ field: 'loading', value: true });
         homeDispatch({ field: 'messageIsStreaming', value: true });
 
         const lesan_ti_en_res = await fetch(
-          'api/lesan_mt?src_lang=ti&tgt_lang=en',
+          `api/lesan_mt?src_lang=${selectedLanguage}&tgt_lang=en`,
           {
             method: 'POST',
             body: JSON.stringify({
@@ -115,14 +111,14 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         const { data } = await lesan_ti_en_res.json();
         console.log('lesanData:', data);
 
-        console.log('Prompt:', message.content);
-        console.log('Translated Prompt:', data.tgt_text);
+        console.log('Prompt:', message?.content);
+        console.log('Translated Prompt:', data?.tgt_text);
 
         const chatBody: ChatBody = {
           model: updatedConversation.model,
           messages: [
             ...selectedConversation.messages,
-            { role: 'user', content: data.tgt_text },
+            { role: 'user', content: data?.tgt_text },
           ],
           key: apiKey,
           prompt: updatedConversation.prompt,
@@ -180,7 +176,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           let isFirst = true;
 
           const lesan_en_ti_res = await fetch(
-            'api/lesan_mt?src_lang=en&tgt_lang=ti',
+            `api/lesan_mt?src_lang=en&tgt_lang=${selectedLanguage}`,
             {
               method: 'POST',
               body: JSON.stringify({
