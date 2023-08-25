@@ -381,7 +381,7 @@ export const ChatInput = ({
       </div>
       <div className="px-3 pt-2 pb-3 text-center text-[12px] text-black/50 dark:text-white/50 md:px-4 md:pt-3 md:pb-6">
         <a
-          href="https://github.com/NegasiHaile/HornChat"
+          href="https://github.com/NegasiHaile/chatbot-ui"
           target="_blank"
           rel="noreferrer"
           className="underline"
@@ -390,7 +390,7 @@ export const ChatInput = ({
         </a>
         .{' '}
         {t(
-          'HornChat is a chatbot target on horn-africa languages. HornChat uses OpenAI and LesanAI to acheive the goal.',
+          'Chatbot solution that addresses linguistic challenges of the Horn of Africa languages within chatGPT.',
         )}
       </div>
     </div>
