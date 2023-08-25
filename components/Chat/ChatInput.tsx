@@ -18,13 +18,15 @@ import {
 
 import { useTranslation } from 'next-i18next';
 
+import { SUPPORTED_LANGUAGES } from '@/utils/app/const';
+
 import { Message } from '@/types/chat';
 import { Plugin } from '@/types/plugin';
 import { Prompt } from '@/types/prompt';
 
 import HomeContext from '@/pages/api/home/home.context';
 
-import { PluginSelect } from './PluginSelect';
+import { LanguageSelect } from './LanguageSelect';
 import { PromptList } from './PromptList';
 import { VariableModal } from './VariableModal';
 
@@ -62,6 +64,9 @@ export const ChatInput = ({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showPluginSelect, setShowPluginSelect] = useState(false);
   const [plugin, setPlugin] = useState<Plugin | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(
+    localStorage.getItem('selectedLanguage'),
+  );
 
   const promptListRef = useRef<HTMLUListElement | null>(null);
 
@@ -256,6 +261,18 @@ export const ChatInput = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (!selectedLanguage || !SUPPORTED_LANGUAGES.includes(selectedLanguage)) {
+      localStorage.setItem('selectedLanguage', 'ti');
+    }
+  }, []);
+
+  const onChangelanguge = (langCode: string) => {
+    console.log('langCode', langCode);
+    setSelectedLanguage(langCode);
+    localStorage.setItem('selectedLanguage', langCode);
+  };
+
   return (
     <div className="absolute bottom-0 left-0 w-full border-transparent bg-gradient-to-b from-transparent via-white to-white pt-6 dark:border-white/20 dark:via-[#343541] dark:to-[#343541] md:pt-2">
       <div className="stretch mx-2 mt-4 flex flex-row gap-3 last:mb-2 md:mx-4 md:mt-[52px] md:last:mb-6 lg:mx-auto lg:max-w-3xl">
@@ -279,41 +296,28 @@ export const ChatInput = ({
             </button>
           )}
 
-        <div className="relative mx-2 flex w-full flex-grow flex-col rounded-md border border-black/10 bg-white shadow-[0_0_10px_rgba(0,0,0,0.10)] dark:border-gray-900/50 dark:bg-[#40414F] dark:text-white dark:shadow-[0_0_15px_rgba(0,0,0,0.10)] sm:mx-4">
+        <div className="relative mx-2 flex w-full flex-grow flex-col h-fit items-center rounded-md border border-black/10 bg-white shadow-[0_0_10px_rgba(0,0,0,0.10)] dark:border-gray-900/50 dark:bg-[#40414F] dark:text-white dark:shadow-[0_0_15px_rgba(0,0,0,0.10)] sm:mx-4">
           <button
-            className="absolute left-2 top-2 rounded-sm p-1 text-neutral-800 opacity-60 hover:bg-neutral-200 hover:text-neutral-900 dark:bg-opacity-50 dark:text-neutral-100 dark:hover:text-neutral-200"
+            className="absolute flex items-center left-2 top-2 bottom-2 rounded-sm p-0 md:p-1 text-neutral-800 opacity-60 hover:bg-neutral-200 hover:text-neutral-900 dark:bg-opacity-50 dark:text-neutral-100 dark:hover:text-neutral-200"
             onClick={() => setShowPluginSelect(!showPluginSelect)}
             onKeyDown={(e) => {}}
           >
-            {plugin ? <IconBrandGoogle size={20} /> : <IconBolt size={20} />}
+            <IconBolt size={20} />
+            <span className="text-xs uppercase">{selectedLanguage}</span>
           </button>
 
           {showPluginSelect && (
-            <div className="absolute left-0 bottom-14 rounded bg-white dark:bg-[#343541]">
-              <PluginSelect
-                plugin={plugin}
-                onKeyDown={(e: any) => {
-                  if (e.key === 'Escape') {
-                    e.preventDefault();
-                    setShowPluginSelect(false);
-                    textareaRef.current?.focus();
-                  }
-                }}
-                onPluginChange={(plugin: Plugin) => {
-                  setPlugin(plugin);
-                  setShowPluginSelect(false);
-
-                  if (textareaRef && textareaRef.current) {
-                    textareaRef.current.focus();
-                  }
-                }}
+            <div className="absolute left-0 bottom-14  rounded bg-white dark:bg-[#343541]">
+              <LanguageSelect
+                selectedLanguage={selectedLanguage || 'ti'}
+                onChangelanguge={onChangelanguge}
               />
             </div>
           )}
 
           <textarea
             ref={textareaRef}
-            className="m-0 w-full resize-none border-0 bg-transparent p-0 py-2 pr-8 pl-10 text-black dark:bg-transparent dark:text-white md:py-3 md:pl-10"
+            className="m-0 w-full resize-none border-0 bg-transparent p-0 py-2 pr-8 pl-14 text-black dark:bg-transparent dark:text-white md:py-3"
             style={{
               resize: 'none',
               bottom: `${textareaRef?.current?.scrollHeight}px`,
