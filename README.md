@@ -56,6 +56,7 @@ OPENAI_API_VERSION='2023-03-15-preview'
 ```
 
 **5. Provide MongoDB URL**
+
 Add the following in to your `.env.local` file
 
 ```bash
@@ -63,6 +64,7 @@ MONGODB_URI=mongodb+srv://negasi:Goa3sixMQsxgLUGC@hornchat-v01.ogqsg0j.mongodb.n
 ```
 
 > **[!NOTE]**
+
 > If you need to use your own credentials, Please replace my MongoDB credentials with your own like the following
 
 ```bash
@@ -70,7 +72,7 @@ MONGODB_URI=mongodb+srv://YOUR_USER_NAME:YOUR_PASSWORD@hornchat-v01.ogqsg0j.mong
 ```
 
 **5. Run App**
-**For use only**
+**A. For use only**
 
 ```bash
 npm run build
@@ -82,7 +84,7 @@ Then
 npm run start
 ```
 
-**For development (If you need to make a change on the code base and see your results)**
+**B. For development (If you need to make a change on the codebase and see your results)**
 
 ```bash
 npm run dev
