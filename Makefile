@@ -3,16 +3,16 @@ include .env
 .PHONY: all
 
 build:
-	docker build -t chatbot-ui .
+	docker build -t hornchat .
 
 run:
 	export $(cat .env | xargs)
-	docker stop chatbot-ui || true && docker rm chatbot-ui || true
-	docker run --name chatbot-ui --rm -e OPENAI_API_KEY=${OPENAI_API_KEY} -p 3000:3000 chatbot-ui
+	docker stop hornchat || true && docker rm hornchat || true
+	docker run --name hornchat --rm -e OPENAI_API_KEY=${OPENAI_API_KEY} -p 3000:3000 hornchat
 
 logs:
-	docker logs -f chatbot-ui
+	docker logs -f hornchat
 
 push:
-	docker tag chatbot-ui:latest ${DOCKER_USER}/chatbot-ui:${DOCKER_TAG}
-	docker push ${DOCKER_USER}/chatbot-ui:${DOCKER_TAG}
+	docker tag hornchat:latest ${DOCKER_USER}/hornchat:${DOCKER_TAG}
+	docker push ${DOCKER_USER}/hornchat:${DOCKER_TAG}

@@ -1,0 +1,14 @@
+{
+  "New prompt": "ሓድሽ ቓለ መሕተት",
+  "New folder": "ሓድሽ ማህደር",
+  "No prompts.": "ቓለ መሕተት የለን።",
+  "No data.": "ዳታ የለን።",
+  "Search prompts...": "ቓለ መሕተት ይግለዩ...",
+  "Name": "ሽም",
+  "Description": "መግለፂ",
+  "A description for your prompt.": "ንቓለ መሕተትኻ ዝኸውን መግለፂ።",
+  "Prompt": "ቓለ መሕተት",
+  "Prompt content. Use {{}} to denote a variable. Ex: {{name}} is a {{adjective}} {{noun}}": "ናይ ቓለ መሕተት ትሕዝቶ። ንሓደ ተለዋዋጢ ንምምልካት {{}} ተጠቐም። ንኣብነት፦ {{name}} {{adjective}} {{noun}} እዩ።",
+  "Save": "ኣቐምጥ",
+  "Search...": "ይድለዩ..."
+}

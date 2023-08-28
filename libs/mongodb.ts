@@ -7,7 +7,7 @@ declare global {
   };
 }
 
-const MONGODB_URI = process.env.NEXT_PUBLIC_MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI || MONGODB_URI.length === 0) {
   throw new Error('Please add your MongoDB URI to .env.local');

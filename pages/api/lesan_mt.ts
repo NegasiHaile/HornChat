@@ -14,8 +14,8 @@ export default async function handler(
 
   const { src_lang, tgt_lang } = req.query;
   const { text } = reqBody;
-  const API_URL = process.env.NEXT_PUBLIC_LESAN_API_URL;
-  const API_KEY = process.env.NEXT_PUBLIC_LESAN_API_KEY;
+  const API_URL = process.env.LESAN_API_URL;
+  const API_KEY = process.env.LESAN_API_KEY;
 
   if (!(!!src_lang && !!tgt_lang))
     res

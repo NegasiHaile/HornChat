@@ -329,7 +329,7 @@ export const ChatInput = ({
               }`,
             }}
             placeholder={
-              t('Type a message or type "/" to select a prompt...') || ''
+              t('Type a message or type / to select a prompt...') || ''
             }
             value={content}
             rows={1}
@@ -390,11 +390,11 @@ export const ChatInput = ({
           rel="noreferrer"
           className="underline"
         >
-          HornChat
+          {t('HornChat')}
         </a>
         .{' '}
         {t(
-          'Chatbot solution that addresses linguistic challenges of the Horn of Africa languages within chatGPT.',
+          'Chatbot solution that addresses linguistic challenges of low resource languages in Large Language Models.',
         )}
       </div>
     </div>
