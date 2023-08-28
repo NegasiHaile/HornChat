@@ -34,14 +34,14 @@ export const LanguageSelect = ({
             value="ti"
             className="dark:bg-[#343541] dark:text-white"
           >
-            Tigrinya
+            {t(`Tigrinya`)}
           </option>
           <option
             key="am"
             value="am"
             className="dark:bg-[#343541] dark:text-white"
           >
-            Amharic
+            {t(`Amharic`)}
           </option>
         </select>
       </div>
