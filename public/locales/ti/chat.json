@@ -28,11 +28,18 @@
   "click if using a .env.local file": ".env.local ፋይል ትጥቀም እንተኾንካ ጠውቕ",
   "Message limit is {{maxLength}} characters. You have entered {{valueLength}} characters.": "ደረት መልእኽቲ {{maxLength}} ፊደላት እዩ። {{valueLength}} ፊደላት ኣእቲኻ ኣለኻ።",
   "Please enter a message": "በይዘኦም መልእኽቶም የእትዉ!",
-  "Chatbot solution that addresses linguistic challenges of low resource languages in Large Language Models.": "ኣብ ዓበይቲ ሞዴላት ቋንቋታት ትሑት ጸጋ ዘለዎም ቋንቋታት ንዘጋጥሞም ቋንቋዊ ብድሆታት ዝምልስ ናይ ቻትቦት መፍትሒ።",
+  "Chatbot solution that addresses linguistic challenges of low resource languages in Large Language Models.": "ኣብ ዓበይቲ ሞዴላት ቋንቋታት ትሑት ጸጋ ዘለዎም ቋንቋታት ንዘጋጥሞም ቋንቋዊ ብድሆታት ዘቃልል ናይ ቻትቦት መፍትሒ እዩ።",
   "Are you sure you want to clear all messages?": "ርግጸኛ ዲኻ ኩሉ መልእኽትታት ከተጽርዮ ትደሊ?",
   "Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.": "ከም 0.8 ዝኣመሰሉ ላዕለዎት ክብርታት ነቲ ውጽኢት ዝያዳ ዕድመ ንእስነት ክገብርዎ እንከለዉ፡ ከም 0.2 ዝኣመሰሉ ታሕተዎት ክብርታት ድማ ዝያዳ ትኹረትን ውሳኒን ክገብሩዎ እዮም።",
+  "Default": "ትሑዝ",
   "Precise": "ዝተፀጋግዐ",
   "Neutral": "ማእኸላይ",
   "Creative": "ፈጣራይ",
-  "View Account Usage": "ዝተጠቐምዎ ሕሳቦም ይርኣዩ"
+  "View Account Usage": "ዝተጠቐምዎ ሕሳቦም ይርኣዩ",
+  "Tigrinya": "ትግርኛ",
+  "Amharic": "ኣማርኛ",
+  "TI": "ትግ",
+  "AM": "ኣማ",
+  "ti": "ትግ",
+  "am": "ኣማ"
 }

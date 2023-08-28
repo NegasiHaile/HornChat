@@ -2,7 +2,7 @@
 
 **HornChat** is a chatbot built with a combination of **Large Language Models(LLM)** and **Translation Systems** to solve linguistic problems of low-resource languages, currently _Tigrinya_ and _Amharic_.
 
-![HornChat](./public/screenshots/screenshot-0402023.jpg)
+![HornChat](./public/screenshots/screenshot-0402023.png)
 
 ## Deploy
 
