@@ -10,7 +10,7 @@
 
 Host
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FNegasiHaile%2Fchatbot-ui)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FNegasiHaile%2FHornChat)
 
 **Docker**
 
@@ -64,7 +64,6 @@ MONGODB_URI=mongodb+srv://negasi:Goa3sixMQsxgLUGC@hornchat-v01.ogqsg0j.mongodb.n
 ```
 
 > **[!NOTE]**
-
 > If you need to use your own credentials, Please replace my MongoDB credentials with your own like the following
 
 ```bash
