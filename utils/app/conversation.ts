@@ -68,24 +68,28 @@ export const getUserHistory = async (): Promise<UserHistory> => {
     return await parsedUserHistory;
   };
 
-  const getUserHistory = async (userId: string) => {
-    const existingUserHistory = await fetch(
-      `/api/user_history?userId=${userId}`,
-      {
-        method: 'GET',
-      },
-    );
-    const parseUserHistory = await existingUserHistory.json();
-    if (parseUserHistory && parseUserHistory?._id) {
-      return parseUserHistory;
-    } else {
-      createUserHistory();
+  const getUserConvoHistory = async (userId: string) => {
+    try {
+      const existingUserHistory = await fetch(
+        `/api/user_history?userId=${userId}`,
+        {
+          method: 'GET',
+        },
+      );
+      const parseUserHistory = await existingUserHistory.json();
+      if (parseUserHistory && parseUserHistory?._id) {
+        return parseUserHistory;
+      } else {
+        createUserHistory();
+      }
+    } catch (error) {
+      return error;
     }
   };
 
   if (user?._id) {
     // If there is a user in local storage, find that user in the database and fetch their chat history
-    return getUserHistory(user._id);
+    return getUserConvoHistory(user._id);
   } else {
     // But if there is no any user detail in the local storage, save a new bluprint of a chat history for the user
     // also fetch their data here, then store the user detail in to local storage

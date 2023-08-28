@@ -70,9 +70,10 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
   const handleSend = useCallback(
     async (message: Message, deleteCount = 0, plugin: Plugin | null = null) => {
-      //  requesting to Lesan
       const prompt = message.content;
       const selectedLanguage = localStorage.getItem('selectedLanguage') || 'ti';
+
+      console.log('Prompt:', message?.content);
 
       if (selectedConversation) {
         let updatedConversation: Conversation;
@@ -109,9 +110,13 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           },
         );
         const { data } = await lesan_ti_en_res.json();
-        console.log('lesanData:', data);
 
-        console.log('Prompt:', message?.content);
+        if (!data?.tgt_text) {
+          homeDispatch({ field: 'loading', value: false });
+          homeDispatch({ field: 'messageIsStreaming', value: false });
+          toast.error('Translation internal server error!');
+        }
+
         console.log('Translated Prompt:', data?.tgt_text);
 
         const chatBody: ChatBody = {
@@ -124,7 +129,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           prompt: updatedConversation.prompt,
           temperature: updatedConversation.temperature,
         };
+
         console.log('chatBody:', chatBody);
+
         const endpoint = getEndpoint(plugin);
         let body;
         if (!plugin) {
@@ -140,6 +147,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               ?.requiredKeys.find((key) => key.key === 'GOOGLE_CSE_ID')?.value,
           });
         }
+
         const controller = new AbortController();
         const response = await fetch(endpoint, {
           method: 'POST',
@@ -156,7 +164,10 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           toast.error(response.statusText);
           return;
         }
+
         const text = await response.text();
+        console.log('OpenAI Response:', text);
+
         if (!text) {
           homeDispatch({ field: 'loading', value: false });
           homeDispatch({ field: 'messageIsStreaming', value: false });
@@ -186,9 +197,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           );
           const { data } = await lesan_en_ti_res.json();
 
-          console.log('OpenAi Response:', text);
           console.log('Translated Response:', data?.tgt_text);
-          console.log('Prompt on bottom:', prompt);
 
           if (isFirst) {
             isFirst = false;
