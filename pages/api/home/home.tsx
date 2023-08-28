@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useQuery } from 'react-query';
 
 import { GetServerSideProps } from 'next';
@@ -296,27 +297,35 @@ const Home = ({
     // FETCH user-conversation-history-here
     // and dispatch the values instead of using from local storage
     // Use getUserHistory() function
-    getUserHistory().then((response) => {
-      const folders = response?.folders;
-      if (folders) {
-        dispatch({ field: 'folders', value: folders });
-      }
+    getUserHistory()
+      .then((response) => {
+        const folders = response?.folders;
+        if (folders) {
+          dispatch({ field: 'folders', value: folders });
+        }
 
-      const prompts = response?.prompts;
-      if (prompts) {
-        dispatch({ field: 'prompts', value: prompts });
-      }
+        const prompts = response?.prompts;
+        if (prompts) {
+          dispatch({ field: 'prompts', value: prompts });
+        }
 
-      const conversationHistory = response?.history;
-      if (conversationHistory) {
-        const parsedConversationHistory: Conversation[] = conversationHistory;
-        const cleanedConversationHistory = cleanConversationHistory(
-          parsedConversationHistory,
-        );
+        const conversationHistory = response?.history;
+        if (conversationHistory) {
+          const parsedConversationHistory: Conversation[] = conversationHistory;
+          const cleanedConversationHistory = cleanConversationHistory(
+            parsedConversationHistory,
+          );
 
-        dispatch({ field: 'conversations', value: cleanedConversationHistory });
-      }
-    });
+          dispatch({
+            field: 'conversations',
+            value: cleanedConversationHistory,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log('Error:', error);
+        toast.error('Error, please check your internet connection!');
+      });
 
     const selectedConversation = localStorage.getItem('selectedConversation');
     if (selectedConversation) {
@@ -401,7 +410,7 @@ const Home = ({
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
-  // locale = 'ti';
+  locale = 'ti';
   const defaultModelId =
     (process.env.DEFAULT_MODEL &&
       Object.values(OpenAIModelID).includes(
