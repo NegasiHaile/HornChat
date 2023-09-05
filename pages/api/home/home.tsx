@@ -41,6 +41,8 @@ import Promptbar from '@/components/Promptbar';
 import HomeContext from './home.context';
 import { HomeInitialState, initialState } from './home.state';
 
+import { parse, serialize } from 'cookie';
+import Cookies from 'universal-cookie';
 import { v4 as uuidv4 } from 'uuid';
 
 interface Props {
@@ -49,6 +51,7 @@ interface Props {
   defaultModelId: OpenAIModelID;
 }
 
+const cookies = new Cookies();
 const Home = ({
   serverSideApiKeyIsSet,
   serverSidePluginKeysSet,
@@ -412,8 +415,13 @@ const Home = ({
 };
 export default Home;
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
-  locale = 'ti';
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const cookies = parse(context.req.headers.cookie || '');
+  const selectedLanguage = cookies.selectedLanguage || '';
+  const locale = selectedLanguage;
+
+  console.log('locale:', locale);
+
   const defaultModelId =
     (process.env.DEFAULT_MODEL &&
       Object.values(OpenAIModelID).includes(

@@ -1,0 +1,14 @@
+{
+  "New prompt": "አዲስ መጠየቅያ",
+  "New folder": "አዲስ መዝገብ",
+  "No prompts.": "መመዝገብያዎች የሉም።",
+  "No data.": "ዳታ የለም።",
+  "Search prompts...": "መተየቅያዎችን ፍልግ...",
+  "Name": "ስም",
+  "Description": "መግለጫ",
+  "A description for your prompt.": "ለመተየቅያዎ መግለጫ",
+  "Prompt": "መጠየቅያ",
+  "Prompt content. Use {{}} to denote a variable. Ex: {{name}} is a {{adjective}} {{noun}}": "ፈጣን ይዘት። ተለዋዋጭን ለማመልከት {{}}ን ይጠቀሙ። ለምሳሌ፡- {{name}} {{ adjective}} {{noun}} ነው።",
+  "Save": "አስቀምጥ",
+  "Search...": "ፍልግ..."
+}

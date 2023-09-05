@@ -30,6 +30,8 @@ import { LanguageSelect } from './LanguageSelect';
 import { PromptList } from './PromptList';
 import { VariableModal } from './VariableModal';
 
+import Cookies from 'universal-cookie';
+
 interface Props {
   onSend: (message: Message, plugin: Plugin | null) => void;
   onRegenerate: () => void;
@@ -48,6 +50,7 @@ export const ChatInput = ({
   showScrollDownButton,
 }: Props) => {
   const { t } = useTranslation('chat');
+  const cookies = new Cookies();
 
   const {
     state: { selectedConversation, messageIsStreaming, prompts },
@@ -263,14 +266,17 @@ export const ChatInput = ({
 
   useEffect(() => {
     if (!selectedLanguage || !SUPPORTED_LANGUAGES.includes(selectedLanguage)) {
+      cookies.set('selectedLanguage', 'ti');
       localStorage.setItem('selectedLanguage', 'ti');
     }
   }, []);
 
-  const onChangelanguge = (langCode: string) => {
-    console.log('langCode', langCode);
+  const onChangelanguge = async (langCode: string) => {
     setSelectedLanguage(langCode);
+    cookies.set('selectedLanguage', langCode);
     localStorage.setItem('selectedLanguage', langCode);
+
+    await window.location.reload();
   };
 
   return (
