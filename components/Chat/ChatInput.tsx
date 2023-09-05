@@ -310,7 +310,7 @@ export const ChatInput = ({
           >
             <IconBolt size={20} />
             <span className="text-md font-bold uppercase">
-              {t(`${selectedLanguage}`)}
+              {t(`${selectedLanguage ?? 'ti'}`)}
             </span>
           </button>
 

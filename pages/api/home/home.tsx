@@ -417,10 +417,7 @@ export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const cookies = parse(context.req.headers.cookie || '');
-  const selectedLanguage = cookies.selectedLanguage || '';
-  const locale = selectedLanguage;
-
-  console.log('locale:', locale);
+  const locale = cookies.selectedLanguage || 'ti';
 
   const defaultModelId =
     (process.env.DEFAULT_MODEL &&
@@ -444,7 +441,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       serverSideApiKeyIsSet: !!process.env.OPENAI_API_KEY,
       defaultModelId,
       serverSidePluginKeysSet,
-      ...(await serverSideTranslations(locale ?? 'en', [
+      ...(await serverSideTranslations(locale ?? 'ti', [
         'common',
         'chat',
         'sidebar',
